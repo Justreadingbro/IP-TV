@@ -1,0 +1,14 @@
+{
+  "name": "iptv-lux-server",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.21.1",
+    "cors": "^2.8.5",
+    "node-fetch": "^3.3.2"
+  }
+}
