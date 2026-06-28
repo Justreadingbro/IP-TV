@@ -115,7 +115,7 @@ export default function HomePage() {
           initial={{ opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full aspect-[21/9] max-h-[75vh] rounded-3xl overflow-hidden"
+          className="relative w-full aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] max-h-[75vh] rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden"
         >
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-lux-primary/20 via-lux-accent/10 to-transparent animate-aurora-slow" />
@@ -141,7 +141,7 @@ export default function HomePage() {
                 <span className="live-dot" />
                 <span className="text-xs font-semibold text-lux-live uppercase tracking-[0.15em]">Featured Channel</span>
               </div>
-              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold font-display tracking-tight leading-[0.95] mb-4">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-7xl font-bold font-display tracking-tight leading-[0.95] mb-3 sm:mb-4">
                 {hero?.name || 'IPTV Lux'}
               </h1>
               {hero && (

@@ -13,15 +13,20 @@ export default function BottomNav() {
   const { currentPage, setPage } = useStore()
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-50 bg-[rgba(4,4,4,0.92)] backdrop-blur-lg border-t border-white/[0.04] lg:hidden safe-area-bottom">
-      <div className="flex items-center justify-around h-14 px-2">
+    <nav
+      className="fixed bottom-0 left-0 right-0 z-50 bg-[rgba(4,4,4,0.92)] backdrop-blur-lg border-t border-white/[0.04] lg:hidden"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}
+    >
+      <div className="flex items-center justify-around h-14 px-1">
         {items.map(item => {
           const isActive = currentPage === item.id
           return (
             <button
               key={item.id}
               onClick={() => setPage(item.id as any)}
-              className="relative flex flex-col items-center gap-0.5 px-3 py-1 rounded-xl transition-colors duration-200"
+              className="relative flex flex-col items-center gap-0.5 px-2 py-1.5 rounded-xl transition-colors duration-200 min-w-[48px] min-h-[44px]"
+              aria-current={isActive ? 'page' : undefined}
+              tabIndex={0}
             >
               {isActive && (
                 <motion.div
@@ -31,8 +36,8 @@ export default function BottomNav() {
                 />
               )}
               <svg
-                width="20"
-                height="20"
+                width="22"
+                height="22"
                 viewBox="0 0 24 24"
                 fill={isActive ? 'currentColor' : 'none'}
                 stroke="currentColor"

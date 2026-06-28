@@ -17,6 +17,21 @@ function useDebounce<T>(value: T, delay: number): T {
   return debounced
 }
 
+function highlightMatch(text: string, query: string): React.ReactNode {
+  if (!query.trim()) return text
+  const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  const parts = text.split(new RegExp(`(${escaped})`, 'gi'))
+  return (
+    <>
+      {parts.map((part, i) =>
+        part.toLowerCase() === query.toLowerCase()
+          ? <mark key={i} className="bg-lux-primary/20 text-lux-primary rounded-sm px-0.5">{part}</mark>
+          : part
+      )}
+    </>
+  )
+}
+
 export default function SearchPage() {
   const { searchQuery, setSearchQuery, recentSearches, addRecentSearch, clearRecentSearches } = useStore()
   const [allChannels, setAllChannels] = useState<Channel[]>([])
@@ -55,11 +70,18 @@ export default function SearchPage() {
     } else if (e.key === 'ArrowUp') {
       e.preventDefault()
       setSelectedIndex(i => Math.max(i - 1, -1))
-    } else if (e.key === 'Enter' && selectedIndex >= 0 && filtered[selectedIndex]) {
-      const ch = filtered[selectedIndex]
-      useStore.getState().setCurrentChannel(ch)
-      useStore.getState().setIsPlaying(true)
-      useStore.getState().setPage('live')
+    } else if (e.key === 'Enter' && filtered.length > 0) {
+      const idx = selectedIndex >= 0 ? selectedIndex : 0
+      const ch = filtered[idx]
+      if (ch) {
+        useStore.getState().setCurrentChannel(ch)
+        useStore.getState().setIsPlaying(true)
+        useStore.getState().setPage('live')
+      }
+    } else if (e.key === 'Escape') {
+      setSearchQuery('')
+      setSelectedIndex(-1)
+      inputRef.current?.blur()
     }
   }
 
@@ -126,10 +148,29 @@ export default function SearchPage() {
                   <span className="text-white font-semibold">{filtered.length}</span> results for "<span className="text-white">{searchQuery}</span>"
                 </p>
               </div>
+              {selectedIndex >= 0 && (
+                <div className="text-xs text-lux-muted/50 mb-3 flex items-center gap-3">
+                  <span>{selectedIndex + 1} of {filtered.length}</span>
+                  <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] font-mono">↑↓</kbd>
+                  <span>navigate</span>
+                  <kbd className="text-[10px] px-1.5 py-0.5 rounded bg-white/[0.06] font-mono">Enter</kbd>
+                  <span>watch</span>
+                </div>
+              )}
               <div className="channel-grid">
                 {filtered.map((ch, i) => (
-                  <div key={ch.id} data-result-index={i}>
+                  <div
+                    key={ch.id}
+                    data-result-index={i}
+                    className={`relative rounded-2xl transition-all duration-200 ${
+                      selectedIndex === i ? 'ring-2 ring-lux-primary ring-offset-2 ring-offset-lux-bg' : ''
+                    }`}
+                  >
                     <ChannelCard channel={ch} index={i} />
+                    <div className="absolute top-2 left-2 z-10 bg-lux-bg/80 backdrop-blur-sm px-1.5 py-0.5 rounded text-[10px] font-mono text-lux-muted/60">
+                      <span className="font-semibold text-white/80">{highlightMatch(ch.name, searchQuery)}</span>
+                      {ch.category && <span className="ml-1.5">· {ch.category}</span>}
+                    </div>
                   </div>
                 ))}
               </div>
@@ -156,12 +197,12 @@ export default function SearchPage() {
           {/* Suggestions */}
           <div>
             <h3 className="text-xs font-semibold uppercase tracking-wider text-lux-muted/50 mb-3">Suggestions</h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {TRENDING_SUGGESTIONS.map(s => (
                 <button
                   key={s}
                   onClick={() => handleSearch(s)}
-                  className="chip"
+                  className="chip text-[11px] sm:text-xs"
                 >
                   {s}
                 </button>

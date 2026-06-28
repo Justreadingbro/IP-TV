@@ -62,7 +62,8 @@ function ChannelCardInner({ channel, index = 0 }: ChannelCardProps) {
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => { setIsHovered(false); setSpotlight({ x: 50, y: 50 }) }}
-      className="relative group cursor-pointer overflow-hidden rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] transition-all duration-500 hover:border-white/[0.12] hover:shadow-elevated hover:-translate-y-1"
+      whileTap={{ scale: 0.97 }}
+      className="relative group cursor-pointer overflow-hidden rounded-2xl bg-[#0a0a0a] border border-[#1a1a1a] transition-all duration-500 hover:border-white/[0.12] hover:shadow-elevated hover:-translate-y-1 active:scale-[0.97]"
       onClick={handlePlay}
       role="button"
       tabIndex={0}
@@ -104,9 +105,9 @@ function ChannelCardInner({ channel, index = 0 }: ChannelCardProps) {
           )}
         </div>
 
-        {/* Glass overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end p-4">
-          <span className="flex items-center gap-2 text-xs font-medium text-white bg-lux-primary/90 backdrop-blur-sm px-3 py-1.5 rounded-lg transition-transform duration-300 group-hover:scale-105">
+        {/* Glass overlay on hover (always visible on touch) */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex items-end p-3 sm:p-4 md:opacity-0 lg:opacity-0">
+          <span className="flex items-center gap-2 text-xs font-medium text-white bg-lux-primary/90 backdrop-blur-sm px-2.5 sm:px-3 py-1.5 rounded-lg transition-transform duration-300 group-hover:scale-105">
             <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M5 3l14 9-14 9z" /></svg>
             Watch Now
           </span>
